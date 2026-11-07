@@ -561,9 +561,12 @@
                     <div class="detailhero">
 
                         <div>
-                            <div class="eyebrow">
-                                ${esc(p.categoryLabel || p.category)}
-                            </div>
+                            <div>
+                            <h1>${esc(p.title)}</h1>
+
+                            <p class="muted">
+                                ${esc(p.summary || '')}
+                            </p>
 
                             <h1>${esc(p.title)}</h1>
 

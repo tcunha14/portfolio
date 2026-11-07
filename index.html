@@ -213,28 +213,6 @@
             font-size: 14px;
         }
 
-        .filters {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .filter {
-            background: transparent;
-            color: var(--muted);
-            border: 1px solid var(--line);
-            padding: 8px 13px;
-            cursor: pointer;
-        }
-
-        .filter.active,
-        .filter:hover {
-            background: var(--accent);
-            color: #17191a;
-            border-color: var(--accent);
-        }
-
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -540,13 +518,6 @@
                     </p>
                 </div>
 
-                <div class="filters">
-                    <button class="filter active" data-filter="all">Todos</button>
-                    <button class="filter" data-filter="mechanisms">Mecanismos</button>
-                    <button class="filter" data-filter="printing">Impressão 3D</button>
-                    <button class="filter" data-filter="cad">Modelação CAD</button>
-                </div>
-
                 <div class="grid" id="projectGrid">
                     <p class="muted">A carregar projetos...</p>
                 </div>
@@ -652,83 +623,64 @@
         </div>
     </footer>
 
-    <script>
-        let allProjects = [];
-        let currentFilter = 'all';
+   <script>
+    let allProjects = [];
 
-        const grid = document.getElementById('projectGrid');
+    const grid = document.getElementById('projectGrid');
 
-        function render() {
-            const list = allProjects.filter(p =>
-                currentFilter === 'all' || p.category === currentFilter
-            );
+    function render() {
+        grid.innerHTML = allProjects.length
+            ? allProjects.map(p => `
+                <a class="card" href="project.html?id=${encodeURIComponent(p.id)}">
+                    <div class="cover">
+                        ${
+                            p.cover
+                                ? `<img src="${p.cover}" alt="${esc(p.title)}">`
+                                : '<div class="shape"></div>'
+                        }
+                    </div>
 
-            grid.innerHTML = list.length
-                ? list.map((p, i) => `
-                    <a class="card" href="project.html?id=${encodeURIComponent(p.id)}">
-                        <div class="cover">
-                            ${
-                                p.cover
-                                    ? `<img src="${p.cover}" alt="${esc(p.title)}">`
-                                    : '<div class="shape"></div>'
-                            }
-                        </div>
+                    <div class="cardbody">
+                        <h3>${esc(p.title)}</h3>
+                        <p>${esc(p.summary || '')}</p>
+                    </div>
+                </a>
+            `).join('')
+            : '<p class="muted">Ainda não existem projetos.</p>';
+    }
 
-                        <div class="cardbody">
-                            <h3>${esc(p.title)}</h3>
-                            <p>${esc(p.summary || '')}</p>
-                            <span class="tag">${esc(p.categoryLabel || p.category)}</span>
-                        </div>
-                    </a>
-                `).join('')
-                : '<p class="muted">Ainda não existem projetos nesta categoria.</p>';
-        }
+    function esc(s = '') {
+        return String(s).replace(/[&<>"']/g, c => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[c]));
+    }
 
-        function esc(s = '') {
-            return String(s).replace(/[&<>"']/g, c => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#39;'
-            }[c]));
-        }
-
-        document.querySelectorAll('.filter').forEach(b => {
-            b.onclick = () => {
-                document.querySelectorAll('.filter').forEach(x =>
-                    x.classList.remove('active')
-                );
-
-                b.classList.add('active');
-                currentFilter = b.dataset.filter;
-
-                render();
-            };
+    fetch('projects.json')
+        .then(r => {
+            if (!r.ok) throw Error();
+            return r.json();
+        })
+        .then(data => {
+            allProjects = data;
+            render();
+        })
+        .catch(() => {
+            grid.innerHTML = `
+                <p class="muted">
+                    Não foi possível carregar os projetos.
+                    Abre o site através do GitHub Pages ou de um servidor local
+                    (por exemplo, Live Server no VS Code).
+                </p>
+            `;
         });
 
-        fetch('projects.json')
-            .then(r => {
-                if (!r.ok) throw Error();
-                return r.json();
-            })
-            .then(data => {
-                allProjects = data;
-                render();
-            })
-            .catch(() => {
-                grid.innerHTML = `
-                    <p class="muted">
-                        Não foi possível carregar os projetos.
-                        Abre o site através do GitHub Pages ou de um servidor local
-                        (por exemplo, Live Server no VS Code).
-                    </p>
-                `;
-            });
-
-        document.getElementById('year').textContent =
-            new Date().getFullYear();
-    </script>
+    document.getElementById('year').textContent =
+        new Date().getFullYear();
+</script>
 
 </body>
 </html>

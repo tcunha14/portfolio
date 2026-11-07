@@ -1,0 +1,949 @@
+
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Gestor de projetos | Tomás Cunha</title>
+
+    <style>
+        :root {
+            --bg: #101214;
+            --panel: #181c1f;
+            --text: #f1f3f2;
+            --muted: #a4adae;
+            --line: #30383b;
+            --accent: #a5a0a0;
+            --max: 1160px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Inter, Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .wrap {
+            width: min(var(--max), calc(100% - 40px));
+            margin: auto;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background: #101214ed;
+            border-bottom: 1px solid var(--line);
+            backdrop-filter: blur(12px);
+        }
+
+        .nav {
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            font-weight: 850;
+            letter-spacing: .13em;
+        }
+
+        .brand span {
+            color: var(--accent);
+        }
+
+        .admin {
+            padding: 45px 0 80px;
+        }
+
+        h1 {
+            font-size: clamp(38px, 6vw, 58px);
+            letter-spacing: -.05em;
+            margin: 10px 0;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .eyebrow {
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            padding: 22px;
+            margin: 22px 0;
+        }
+
+        .notice {
+            padding: 14px;
+            border: 1px solid #5b4b36;
+            color: #d8c39f;
+            background: #211e19;
+            font-size: 13px;
+            margin: 25px 0;
+        }
+
+        .formgrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            min-width: 0;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            background: #101416;
+            border: 1px solid var(--line);
+            color: var(--text);
+            padding: 11px;
+            font: inherit;
+            border-radius: 0;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 11px 16px;
+            border: 1px solid var(--accent);
+            background: var(--accent);
+            color: #17191a;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .btn.alt {
+            background: transparent;
+            color: var(--text);
+            border-color: var(--line);
+        }
+
+        .btn.danger {
+            background: transparent;
+            color: #ff8b83;
+            border-color: #81413d;
+        }
+
+        .rowbtn {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .projectrow {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .projectrow small {
+            color: var(--muted);
+            display: block;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .preview {
+            max-width: 220px;
+            max-height: 150px;
+            object-fit: contain;
+            border: 1px solid var(--line);
+            margin-top: 8px;
+        }
+
+        /* Galeria */
+
+        .gallery-editor {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .gallery-item {
+            background: #101416;
+            border: 1px solid var(--line);
+            padding: 12px;
+            min-width: 0;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 190px;
+            object-fit: contain;
+            display: block;
+            margin-bottom: 12px;
+            background: #181c1f;
+        }
+
+        .gallery-item textarea {
+            min-height: 75px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 650px) {
+            .wrap {
+                width: calc(100% - 28px);
+            }
+
+            .formgrid,
+            .gallery-editor {
+                grid-template-columns: 1fr;
+            }
+
+            .field.full {
+                grid-column: auto;
+            }
+
+            .projectrow {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .panel {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="wrap nav">
+            <a class="brand" href="index.html">
+                TOMÁS CUNHA<span>.</span>
+            </a>
+
+            <a class="btn alt" href="index.html">
+                Ver site
+            </a>
+        </div>
+    </header>
+
+    <main class="wrap admin">
+
+        <div class="eyebrow">Área de gestão local</div>
+
+        <h1>Gerir projetos.</h1>
+
+        <p class="muted">
+            Adiciona, altera ou remove projetos.
+            No fim, exporta o ficheiro <b>projects.json</b>
+            e substitui o antigo no teu site.
+        </p>
+
+        <div class="notice">
+            <b>Importante:</b>
+            este gestor não publica diretamente na Internet.
+            Funciona no teu computador e prepara o ficheiro de dados
+            para carregares no GitHub Pages.
+            As imagens são comprimidas e guardadas dentro do JSON.
+        </div>
+
+        <div class="panel">
+
+            <h2>Os teus projetos</h2>
+
+            <div id="list"></div>
+
+            <div class="rowbtn">
+
+                <button class="btn" id="newBtn">
+                    + Novo projeto
+                </button>
+
+                <button class="btn alt" id="importBtn">
+                    Importar projects.json
+                </button>
+
+                <input
+                    type="file"
+                    id="importFile"
+                    accept=".json,application/json"
+                    hidden
+                >
+
+                <button class="btn alt" id="exportBtn">
+                    Exportar projects.json
+                </button>
+
+            </div>
+
+            <p class="hint">
+                Guarda uma cópia de segurança do JSON sempre que fizeres alterações.
+            </p>
+
+        </div>
+
+        <div class="panel" id="editorPanel">
+
+            <h2 id="formTitle">Novo projeto</h2>
+
+            <form id="projectForm">
+
+                <input type="hidden" id="editId">
+
+                <div class="formgrid">
+
+                    <div class="field">
+                        <label for="title">Nome do projeto (PT)</label>
+                        <input id="title" required placeholder="Ex.: Suporte ajustável">
+                    </div>
+
+                    <div class="field">
+                        <label for="titleEn">Project name (EN)</label>
+                        <input id="titleEn" placeholder="Example: Adjustable stand">
+                    </div>
+
+                    <div class="field">
+                        <label for="tools">Ferramentas / competências</label>
+                        <input id="tools" placeholder="Autodesk Inventor · PLA · ...">
+                    </div>
+
+                    <div class="field full">
+                        <label for="summary">Resumo curto (PT)</label>
+                        <textarea id="summary" required placeholder="Uma frase para o cartão da página inicial."></textarea>
+                    </div>
+
+                    <div class="field full">
+                        <label for="summaryEn">Short summary (EN)</label>
+                        <textarea id="summaryEn"></textarea>
+                    </div>
+
+                    <div class="field full">
+                        <label for="description">Descrição detalhada (PT)</label>
+                        <textarea id="description" placeholder="Objetivo, funcionamento, desenvolvimento, decisões técnicas..."></textarea>
+                    </div>
+
+                    <div class="field full">
+                        <label for="descriptionEn">Detailed description (EN)</label>
+                        <textarea id="descriptionEn"></textarea>
+                    </div>
+
+                    <div class="field">
+                        <label for="link">Ligação externa (opcional)</label>
+                        <input id="link" type="url" placeholder="https://...">
+                    </div>
+
+                    <div class="field">
+                        <label for="linkLabel">Texto da ligação</label>
+                        <input id="linkLabel" placeholder="Ver no MakerWorld">
+                    </div>
+
+                    <div class="field full">
+                        <label for="coverFile">Imagem principal</label>
+
+                        <input id="coverFile" type="file" accept="image/*">
+
+                        <span class="hint">
+                            A imagem será reduzida automaticamente.
+                            Ao editar, podes manter a imagem atual sem selecionar outra.
+                        </span>
+
+                        <img id="coverPreview" class="preview" hidden>
+                    </div>
+
+                    <div class="field full">
+
+                        <label for="galleryFiles">Fotografias da galeria</label>
+
+                        <input id="galleryFiles" type="file" accept="image/*" multiple>
+
+                        <span class="hint">
+                            Seleciona várias fotografias. Escreve uma descrição
+                            individual por baixo de cada imagem.
+                            Ao selecionar novas fotografias, estas substituem a galeria anterior.
+                        </span>
+
+                        <div id="galleryPreview" class="gallery-editor"></div>
+
+                    </div>
+
+                </div>
+
+                <div class="rowbtn">
+
+                    <button class="btn" type="submit">
+                        Guardar projeto
+                    </button>
+
+                    <button class="btn alt" type="button" id="clearBtn">
+                        Limpar formulário
+                    </button>
+
+                </div>
+
+            </form>
+        </div>
+
+    </main>
+
+    <script>
+
+        let projects = [];
+        let coverData = '';
+        let galleryData = [];
+
+        const $ = id => document.getElementById(id);
+
+        const starter = [
+            {
+                id: 'redutor-planetario',
+                title: 'Redutor planetário',
+                titleEn: 'Planetary speed reducer',
+                summary: 'Mecanismo de transmissão desenvolvido e preparado para impressão 3D.',
+                summaryEn: 'Transmission mechanism designed and prepared for 3D printing.',
+                description: 'Projeto de um redutor planetário desenvolvido em CAD e preparado para impressão 3D.',
+                descriptionEn: 'A planetary speed reducer designed in CAD and prepared for 3D printing.',
+                tools: 'Autodesk Inventor · Impressão 3D · Desenvolvimento de mecanismos',
+                link: 'https://makerworld.com/pt/models/3340296-planetary-speed-reducer#profileId-3794801',
+                linkLabel: 'Ver no MakerWorld',
+                cover: '',
+                gallery: []
+            },
+            {
+                id: 'pecas-funcionais',
+                title: 'Peças funcionais',
+                titleEn: 'Functional parts',
+                summary: 'Peças personalizadas, protótipos e soluções produzidas por fabrico aditivo.',
+                summaryEn: 'Custom parts, prototypes and solutions made through additive manufacturing.',
+                description: 'Peças desenvolvidas para resolver necessidades concretas.',
+                descriptionEn: 'Parts designed to solve practical needs.',
+                tools: 'Modelação 3D · Impressão 3D',
+                link: '',
+                linkLabel: '',
+                cover: '',
+                gallery: []
+            },
+            {
+                id: 'modelacao-inventor',
+                title: 'Modelação no Inventor',
+                titleEn: 'Autodesk Inventor modelling',
+                summary: 'Modelos paramétricos, conjuntos mecânicos e desenhos técnicos.',
+                summaryEn: 'Parametric models, mechanical assemblies and technical drawings.',
+                description: 'Modelos criados no Autodesk Inventor, vistas explodidas e desenhos técnicos.',
+                descriptionEn: 'Models created in Autodesk Inventor, exploded views and technical drawings.',
+                tools: 'Autodesk Inventor · Modelação paramétrica',
+                link: '',
+                linkLabel: '',
+                cover: '',
+                gallery: []
+            },
+            {
+                id: 'mecanismos-demonstrativos',
+                title: 'Mecanismos demonstrativos',
+                titleEn: 'Demonstration mechanisms',
+                summary: 'Sistemas mecânicos concebidos para demonstrar movimento e transmissão.',
+                summaryEn: 'Mechanical systems designed to demonstrate motion and transmission.',
+                description: 'Mecanismos e sistemas de transmissão de movimento.',
+                descriptionEn: 'Mechanisms and motion transmission systems.',
+                tools: 'Mecanismos · Modelação 3D · Prototipagem',
+                link: '',
+                linkLabel: '',
+                cover: '',
+                gallery: []
+            },
+            {
+                id: 'prototipagem-3d',
+                title: 'Prototipagem 3D',
+                titleEn: '3D Prototyping',
+                summary: 'Do modelo digital à validação física de forma, encaixes e funcionalidade.',
+                summaryEn: 'From digital model to physical validation of shape, fit and functionality.',
+                description: 'Processo de prototipagem e alterações feitas após os testes.',
+                descriptionEn: 'Prototyping process and changes made after testing.',
+                tools: 'CAD · Fatiamento · Impressão 3D',
+                link: '',
+                linkLabel: '',
+                cover: '',
+                gallery: []
+            },
+            {
+                id: 'desenho-tecnico',
+                title: 'Desenho técnico',
+                titleEn: 'Technical drawing',
+                summary: 'Documentação técnica e preparação de componentes para produção.',
+                summaryEn: 'Technical documentation and component preparation for production.',
+                description: 'Desenhos técnicos, cotas, tolerâncias e vistas relevantes.',
+                descriptionEn: 'Technical drawings, dimensions, tolerances and relevant views.',
+                tools: 'Autodesk Inventor · Desenho técnico',
+                link: '',
+                linkLabel: '',
+                cover: '',
+                gallery: []
+            }
+        ];
+
+        function slug(s) {
+            return s.toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-|-$/g, '');
+        }
+
+        function escapeHtml(s = '') {
+            return String(s).replace(/[&<>"']/g, c => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[c]));
+        }
+
+        // Compatibilidade com fotografias do formato antigo
+        function normalizeGallery(gallery) {
+            if (!Array.isArray(gallery)) return [];
+
+            return gallery.map(photo => {
+                if (typeof photo === 'string') {
+                    return {
+                        src: photo,
+                        description: ''
+                    };
+                }
+
+                return {
+                    src: photo.src || '',
+                    description: photo.description || ''
+                };
+            }).filter(photo => photo.src);
+        }
+
+        function renderList() {
+            $('list').innerHTML = projects.length
+                ? projects.map(p => `
+                    <div class="projectrow">
+                        <div>
+                            <b>${escapeHtml(p.title)}</b>
+                            <small>
+                                · ${escapeHtml(p.id)}
+                            </small>
+                        </div>
+
+                        <div class="rowbtn">
+                            <button class="btn alt" onclick="editProject('${escapeHtml(p.id)}')">
+                                Editar
+                            </button>
+
+                            <button class="btn danger" onclick="deleteProject('${escapeHtml(p.id)}')">
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                `).join('')
+                : '<p class="hint">Ainda não tens projetos. Clica em “Novo projeto”.</p>';
+        }
+
+        // Galeria sem títulos ou números
+        function renderGalleryEditor() {
+            $('galleryPreview').innerHTML = galleryData.map((photo, index) => `
+                <div class="gallery-item">
+
+                    <img
+                        src="${escapeHtml(photo.src)}"
+                        alt="Imagem ${index + 1}"
+                    >
+
+                    <textarea
+                        data-index="${index}"
+                        placeholder="Escreve a descrição desta imagem..."
+                    >${escapeHtml(photo.description)}</textarea>
+
+                    <button
+                        type="button"
+                        class="btn danger"
+                        data-remove-index="${index}"
+                        style="margin-top: 10px;"
+                    >
+                        Remover imagem
+                    </button>
+
+                </div>
+            `).join('');
+        }
+
+        $('galleryPreview').addEventListener('input', e => {
+            if (e.target.dataset.index === undefined) return;
+
+            const index = Number(e.target.dataset.index);
+
+            if (galleryData[index]) {
+                galleryData[index].description = e.target.value;
+            }
+        });
+
+        $('galleryPreview').addEventListener('click', e => {
+            const button = e.target.closest('[data-remove-index]');
+
+            if (!button) return;
+
+            const index = Number(button.dataset.removeIndex);
+
+            galleryData.splice(index, 1);
+
+            renderGalleryEditor();
+        });
+
+        function clearForm() {
+            $('projectForm').reset();
+
+            $('editId').value = '';
+
+            coverData = '';
+            galleryData = [];
+
+            $('coverPreview').src = '';
+            $('coverPreview').hidden = true;
+
+            $('coverFile').value = '';
+            $('galleryFiles').value = '';
+
+            renderGalleryEditor();
+
+            $('formTitle').textContent = 'Novo projeto';
+        }
+
+        function editProject(id) {
+            const p = projects.find(x => x.id === id);
+
+            if (!p) return;
+
+            $('editId').value = p.id;
+
+            [
+                'title',
+                'titleEn',
+                'tools',
+                'summary',
+                'summaryEn',
+                'description',
+                'descriptionEn',
+                'link',
+                'linkLabel'
+            ].forEach(k => {
+                $(k).value = p[k] || '';
+            });
+
+            coverData = p.cover || '';
+            galleryData = normalizeGallery(p.gallery);
+
+            $('coverPreview').src = coverData;
+            $('coverPreview').hidden = !coverData;
+
+            $('coverFile').value = '';
+            $('galleryFiles').value = '';
+
+            renderGalleryEditor();
+
+            $('formTitle').textContent = 'Editar projeto';
+
+            $('editorPanel').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        function deleteProject(id) {
+            if (!confirm('Eliminar este projeto?')) return;
+
+            projects = projects.filter(p => p.id !== id);
+
+            renderList();
+            clearForm();
+        }
+
+        async function compressImage(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+
+                reader.onload = () => {
+                    const img = new Image();
+
+                    img.onload = () => {
+                        const max = 1500;
+
+                        const scale = Math.min(
+                            1,
+                            max / Math.max(img.width, img.height)
+                        );
+
+                        const canvas = document.createElement('canvas');
+
+                        canvas.width = Math.round(img.width * scale);
+                        canvas.height = Math.round(img.height * scale);
+
+                        const context = canvas.getContext('2d');
+
+                        context.drawImage(
+                            img,
+                            0,
+                            0,
+                            canvas.width,
+                            canvas.height
+                        );
+
+                        resolve(canvas.toDataURL('image/jpeg', 0.78));
+                    };
+
+                    img.onerror = () => reject(
+                        new Error('Não foi possível carregar a imagem.')
+                    );
+
+                    img.src = reader.result;
+                };
+
+                reader.onerror = () => reject(
+                    new Error('Não foi possível ler o ficheiro.')
+                );
+
+                reader.readAsDataURL(file);
+            });
+        }
+
+        $('coverFile').addEventListener('change', async e => {
+            const file = e.target.files[0];
+
+            if (!file) return;
+
+            try {
+                coverData = await compressImage(file);
+
+                $('coverPreview').src = coverData;
+                $('coverPreview').hidden = false;
+            } catch (error) {
+                alert('Não foi possível processar a imagem principal.');
+                e.target.value = '';
+            }
+        });
+
+        $('galleryFiles').addEventListener('change', async e => {
+            const files = [...e.target.files];
+
+            if (!files.length) return;
+
+            try {
+                galleryData = await Promise.all(
+                    files.map(async file => ({
+                        src: await compressImage(file),
+                        description: ''
+                    }))
+                );
+
+                renderGalleryEditor();
+
+            } catch (error) {
+                alert('Ocorreu um erro ao processar uma das fotografias.');
+            }
+        });
+
+        $('projectForm').addEventListener('submit', e => {
+            e.preventDefault();
+
+            const editingId = $('editId').value;
+            const id = editingId || slug($('title').value);
+
+            if (!id) {
+                alert('Introduz um nome válido para o projeto.');
+                return;
+            }
+
+            if (projects.some(p => p.id === id && p.id !== editingId)) {
+                alert('Já existe um projeto com este identificador. Altera o nome.');
+                return;
+            }
+
+            const p = {
+                id,
+                title: $('title').value.trim(),
+                titleEn: $('titleEn').value.trim() || $('title').value.trim(),
+                summary: $('summary').value.trim(),
+                summaryEn: $('summaryEn').value.trim() || $('summary').value.trim(),
+                description: $('description').value.trim(),
+                descriptionEn: $('descriptionEn').value.trim() || $('description').value.trim(),
+                tools: $('tools').value.trim(),
+                link: $('link').value.trim(),
+                linkLabel: $('linkLabel').value.trim(),
+                cover: coverData,
+
+                gallery: galleryData.map(photo => ({
+                    src: photo.src,
+                    description: photo.description
+                }))
+            };
+
+            const index = projects.findIndex(x => x.id === editingId);
+
+            if (index >= 0) {
+                projects[index] = p;
+            } else {
+                projects.push(p);
+            }
+
+            renderList();
+            clearForm();
+
+            alert(
+                'Projeto guardado nesta sessão. Clica em “Exportar projects.json” para guardar as alterações num ficheiro.'
+            );
+        });
+
+        $('newBtn').onclick = () => {
+            clearForm();
+
+            $('editorPanel').scrollIntoView({
+                behavior: 'smooth'
+            });
+        };
+
+        $('clearBtn').onclick = clearForm;
+
+        $('exportBtn').onclick = () => {
+            const blob = new Blob(
+                [JSON.stringify(projects, null, 2)],
+                { type: 'application/json' }
+            );
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+
+            a.href = url;
+            a.download = 'projects.json';
+
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+
+            URL.revokeObjectURL(url);
+        };
+
+        $('importBtn').onclick = () => {
+            $('importFile').click();
+        };
+
+        $('importFile').onchange = async e => {
+            const file = e.target.files[0];
+
+            if (!file) return;
+
+            try {
+                const data = JSON.parse(await file.text());
+
+                if (!Array.isArray(data)) {
+                    throw new Error('Formato inválido.');
+                }
+
+                projects = data.map(p => ({
+                    ...p,
+                    gallery: normalizeGallery(p.gallery)
+                }));
+
+                renderList();
+                clearForm();
+
+                alert('Projetos importados com sucesso.');
+
+            } catch (error) {
+                alert('Não foi possível ler esse JSON.');
+            }
+
+            e.target.value = '';
+        };
+
+        async function load() {
+            try {
+                const response = await fetch('projects.json');
+
+                if (!response.ok) {
+                    throw new Error('Ficheiro não encontrado.');
+                }
+
+                const data = await response.json();
+
+                if (!Array.isArray(data)) {
+                    throw new Error('Formato inválido.');
+                }
+
+                projects = data.map(p => ({
+                    ...p,
+                    gallery: normalizeGallery(p.gallery)
+                }));
+
+            } catch (error) {
+                projects = starter.map(p => ({
+                    ...p,
+                    gallery: []
+                }));
+            }
+
+            renderList();
+        }
+
+        load();
+
+    </script>
+
+</body>
+</html>
