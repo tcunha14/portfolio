@@ -5,11 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
-
     <meta name="description" content="Portefólio de Tomás Cunha: modelação 3D, Autodesk Inventor e impressão 3D.">
-
     <title>Tomás Cunha</title>
 
     <style>
@@ -59,15 +56,17 @@
         }
 
         .nav {
-            height: 72px;
+            min-height: 72px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 15px;
         }
 
         .brand {
             font-weight: 850;
             letter-spacing: .13em;
+            white-space: nowrap;
         }
 
         .brand span {
@@ -76,9 +75,29 @@
 
         nav {
             display: flex;
+            align-items: center;
             gap: 24px;
             color: var(--muted);
             font-size: 13px;
+        }
+
+        nav a:hover {
+            color: var(--text);
+        }
+
+        .lang-btn {
+            padding: 8px 12px;
+            border: 1px solid var(--line);
+            background: transparent;
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .lang-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
         }
 
         .eyebrow {
@@ -94,7 +113,7 @@
             padding: 12px 17px;
             border: 1px solid var(--accent);
             background: var(--accent);
-            color: #17191a;
+            color: #f1f3f2;
             font-size: 11px;
             font-weight: 800;
             letter-spacing: .08em;
@@ -265,15 +284,6 @@
             margin: 0;
         }
 
-        .tag {
-            display: inline-block;
-            color: var(--accent);
-            font-size: 10px;
-            letter-spacing: .12em;
-            text-transform: uppercase;
-            margin-top: 12px;
-        }
-
         .skills {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -314,84 +324,8 @@
             font-size: 11px;
         }
 
-        .back {
-            display: inline-block;
-            color: var(--accent);
-            margin: 28px 0;
-        }
-
-        .detailhero {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 35px;
-            align-items: center;
-            padding: 20px 0 55px;
-        }
-
-        .detailhero h1 {
-            font-size: clamp(38px, 6vw, 65px);
-            line-height: 1.03;
-            letter-spacing: -.05em;
-            margin: 10px 0;
-        }
-
-        .detailvisual {
-            min-height: 320px;
-            background: linear-gradient(140deg, #252c30, #15191b);
-            border: 1px solid var(--line);
-            display: grid;
-            place-items: center;
-            overflow: hidden;
-        }
-
-        .detailvisual img {
-            width: 100%;
-            height: 100%;
-            min-height: 320px;
-            object-fit: cover;
-        }
-
-        .cols {
-            display: grid;
-            grid-template-columns: 1.3fr .7fr;
-            gap: 35px;
-        }
-
-        .info {
-            background: var(--panel);
-            border: 1px solid var(--line);
-            padding: 22px;
-        }
-
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
-
-        .gallery img {
-            width: 100%;
-            height: 210px;
-            object-fit: cover;
-            border: 1px solid var(--line);
-        }
-
-        .emptyphoto {
-            height: 180px;
-            display: grid;
-            place-items: center;
-            text-align: center;
-            padding: 15px;
-            background: var(--panel);
-            border: 1px dashed #50595d;
-            color: var(--muted);
-            font-size: 12px;
-        }
-
-        /* Adaptação a tablets */
         @media (max-width: 800px) {
-            .hero,
-            .detailhero {
+            .hero {
                 grid-template-columns: 1fr;
             }
 
@@ -402,21 +336,25 @@
             .skills {
                 grid-template-columns: repeat(2, 1fr);
             }
-
-            .cols {
-                grid-template-columns: 1fr;
-            }
         }
 
-        /* Adaptação a telemóveis */
         @media (max-width: 560px) {
             .wrap {
                 width: calc(100% - 28px);
             }
 
+            .nav {
+                flex-wrap: wrap;
+                padding: 12px 0;
+            }
+
             nav {
                 gap: 10px;
                 flex-wrap: wrap;
+            }
+
+            nav a {
+                font-size: 11px;
             }
 
             .hero {
@@ -450,10 +388,6 @@
             .contact .btn {
                 margin-top: 12px;
             }
-
-            .gallery {
-                grid-template-columns: 1fr 1fr;
-            }
         }
     </style>
 </head>
@@ -467,33 +401,37 @@
             </a>
 
             <nav>
-                <a href="#projetos">Projetos</a>
-                <a href="#competencias">Competências</a>
-                <a href="#sobre">Sobre</a>
-                <a href="#contacto">Contacto</a>
+                <a href="#projetos" data-i18n="navProjects">Projetos</a>
+                <a href="#competencias" data-i18n="navSkills">Competências</a>
+                <a href="#sobre" data-i18n="navAbout">Sobre</a>
+                <a href="#contacto" data-i18n="navContact">Contacto</a>
+                <button class="lang-btn" id="languageToggle" type="button">EN</button>
             </nav>
         </div>
     </header>
 
     <main>
 
-        <!-- Apresentação -->
         <div class="wrap hero">
             <div>
-                <div class="eyebrow">Portefólio pessoal · Design e fabrico</div>
+                <div class="eyebrow" data-i18n="heroEyebrow">
+                    Portefólio pessoal · Design e fabrico
+                </div>
 
                 <h1>
                     IDEIAS<br>
                     EM <span>3D.</span>
                 </h1>
 
-                <p class="muted">
+                <p class="muted" data-i18n="heroText">
                     Desenvolvimento de modelos 3D, mecanismos e peças funcionais.
                     Da primeira ideia ao objeto físico, com foco no detalhe,
                     na funcionalidade e no processo de fabrico.
                 </p>
 
-                <a class="btn" href="#projetos">Explorar projetos</a>
+                <a class="btn" href="#projetos" data-i18n="explore">
+                    Explorar projetos
+                </a>
             </div>
 
             <div class="art">
@@ -502,17 +440,19 @@
             </div>
         </div>
 
-        <!-- Projetos -->
         <section id="projetos">
             <div class="wrap">
-
                 <div class="section-head">
                     <div>
-                        <div class="eyebrow">Trabalho selecionado</div>
-                        <h2>Projetos em destaque.</h2>
+                        <div class="eyebrow" data-i18n="selectedWork">
+                            Trabalho selecionado
+                        </div>
+                        <h2 data-i18n="featuredProjects">
+                            Projetos em destaque.
+                        </h2>
                     </div>
 
-                    <p>
+                    <p data-i18n="projectsIntro">
                         Seleciona um projeto para veres os detalhes,
                         as imagens, as ferramentas e o processo de desenvolvimento.
                     </p>
@@ -521,53 +461,60 @@
                 <div class="grid" id="projectGrid">
                     <p class="muted">A carregar projetos...</p>
                 </div>
-
             </div>
         </section>
 
-        <!-- Competências -->
         <section id="competencias">
             <div class="wrap">
-                <div class="eyebrow">Ferramentas e conhecimentos</div>
-                <h2>Competências técnicas.</h2>
+                <div class="eyebrow" data-i18n="toolsKnowledge">
+                    Ferramentas e conhecimentos
+                </div>
+                <h2 data-i18n="technicalSkills">Competências técnicas.</h2>
 
                 <div class="skills">
 
                     <div class="skill">
                         <span class="eyebrow">01 / CAD</span>
                         <b>Modelação 3D</b>
-                        <p>Criação de peças, componentes e conjuntos tridimensionais.</p>
+                        <p data-i18n="skill1">
+                            Criação de peças, componentes e conjuntos tridimensionais.
+                        </p>
                     </div>
 
                     <div class="skill">
                         <span class="eyebrow">02 / SOFTWARE</span>
                         <b>Autodesk Inventor</b>
-                        <p>Modelação paramétrica, montagem e desenho técnico.</p>
+                        <p data-i18n="skill2">
+                            Modelação paramétrica, montagem e desenho técnico.
+                        </p>
                     </div>
 
                     <div class="skill">
                         <span class="eyebrow">03 / PRODUCTION</span>
-                        <b>Impressão 3D</b>
-                        <p>Preparação de modelos, fatiamento e fabrico aditivo.</p>
+                        <b data-i18n="skill3Title">Impressão 3D</b>
+                        <p data-i18n="skill3">
+                            Preparação de modelos, fatiamento e fabrico aditivo.
+                        </p>
                     </div>
 
                     <div class="skill">
                         <span class="eyebrow">04 / DESIGN</span>
-                        <b>Desenvolvimento de mecanismos</b>
-                        <p>Conceção de sistemas mecânicos e soluções funcionais.</p>
+                        <b data-i18n="skill4Title">Desenvolvimento de mecanismos</b>
+                        <p data-i18n="skill4">
+                            Conceção de sistemas mecânicos e soluções funcionais.
+                        </p>
                     </div>
 
                 </div>
             </div>
         </section>
 
-        <!-- Sobre mim -->
         <section id="sobre">
             <div class="wrap">
-                <div class="eyebrow">Conhece o autor</div>
-                <h2>Sobre mim.</h2>
+                <div class="eyebrow" data-i18n="aboutEyebrow">Conhece o autor</div>
+                <h2 data-i18n="aboutTitle">Sobre mim.</h2>
 
-                <p class="muted" style="max-width:700px">
+                <p class="muted" style="max-width:700px" data-i18n="aboutText">
                     Sou o Tomás Cunha e tenho interesse pelo desenvolvimento
                     de produtos, modelação CAD e impressão 3D. Gosto de
                     transformar ideias em objetos reais, explorar mecanismos
@@ -576,46 +523,36 @@
             </div>
         </section>
 
-        <!-- Contacto -->
         <section id="contacto">
             <div class="wrap contact">
-
                 <div>
-                    <div class="eyebrow">Vamos conversar</div>
-                    <h2>Tens um projeto em mente?</h2>
+                    <div class="eyebrow" data-i18n="contactEyebrow">Vamos conversar</div>
+                    <h2 data-i18n="contactTitle">Tens um projeto em mente?</h2>
 
-                    <p class="muted">
+                    <p class="muted" data-i18n="contactText">
                         Entra em contacto para ideias, colaborações
                         ou projetos personalizados.
                     </p>
                 </div>
 
                 <div>
-                    <a class="btn alt" href="mailto:tomascamposcunha14@gmail.com">
-                        Email
-                    </a>
+                    <a class="btn alt" href="mailto:tomascamposcunha14@gmail.com">Email</a>
 
                     <a class="btn alt"
                        href="https://www.instagram.com/tcunha14_/"
                        target="_blank"
-                       rel="noopener">
-                        Instagram
-                    </a>
+                       rel="noopener">Instagram</a>
 
                     <a class="btn alt"
                        href="https://makerworld.com/en/@tcunha"
                        target="_blank"
-                       rel="noopener">
-                        MakerWorld
-                    </a>
+                       rel="noopener">MakerWorld</a>
                 </div>
-
             </div>
         </section>
 
     </main>
 
-    <!-- Rodapé -->
     <footer class="footer">
         <div class="wrap">
             TOMÁS CUNHA. / 3D DESIGN & PRINTING · ©
@@ -623,64 +560,155 @@
         </div>
     </footer>
 
-   <script>
-    let allProjects = [];
+    <script>
+        let allProjects = [];
+        let currentLanguage = 'pt';
 
-    const grid = document.getElementById('projectGrid');
+        const grid = document.getElementById('projectGrid');
+        const languageToggle = document.getElementById('languageToggle');
 
-    function render() {
-        grid.innerHTML = allProjects.length
-            ? allProjects.map(p => `
-                <a class="card" href="project.html?id=${encodeURIComponent(p.id)}">
-                    <div class="cover">
-                        ${
-                            p.cover
-                                ? `<img src="${p.cover}" alt="${esc(p.title)}">`
-                                : '<div class="shape"></div>'
-                        }
-                    </div>
+        const translations = {
+            en: {
+                navProjects: 'Projects',
+                navSkills: 'Skills',
+                navAbout: 'About',
+                navContact: 'Contact',
+                heroEyebrow: 'Personal portfolio · Design and manufacturing',
+                heroText: 'Development of 3D models, mechanisms and functional parts. From the first idea to the physical object, with a focus on detail, functionality and the manufacturing process.',
+                explore: 'Explore projects',
+                selectedWork: 'Selected work',
+                featuredProjects: 'Featured projects.',
+                projectsIntro: 'Select a project to view its details, images, tools and development process.',
+                toolsKnowledge: 'Tools and knowledge',
+                technicalSkills: 'Technical skills.',
+                skill1: 'Creation of parts, components and three-dimensional assemblies.',
+                skill2: 'Parametric modelling, assembly and technical drawing.',
+                skill3Title: '3D Printing',
+                skill3: 'Model preparation, slicing and additive manufacturing.',
+                skill4Title: 'Mechanism development',
+                skill4: 'Design of mechanical systems and functional solutions.',
+                aboutEyebrow: 'Meet the designer',
+                aboutTitle: 'About me.',
+                aboutText: 'I am Tomás Cunha and I am interested in product development, CAD modelling and 3D printing. I enjoy turning ideas into real objects, exploring mechanisms and improving projects through testing and prototyping.',
+                contactEyebrow: 'Get in touch',
+                contactTitle: 'Have a project in mind?',
+                contactText: 'Get in touch for ideas, collaborations or custom projects.',
+                loading: 'Loading projects...',
+                empty: 'There are no projects yet.',
+                loadError: 'Unable to load the projects. Open the website through GitHub Pages or a local server.'
+            },
 
-                    <div class="cardbody">
-                        <h3>${esc(p.title)}</h3>
-                        <p>${esc(p.summary || '')}</p>
-                    </div>
-                </a>
-            `).join('')
-            : '<p class="muted">Ainda não existem projetos.</p>';
-    }
+            pt: {
+                navProjects: 'Projetos',
+                navSkills: 'Competências',
+                navAbout: 'Sobre',
+                navContact: 'Contacto',
+                heroEyebrow: 'Portefólio pessoal · Design e fabrico',
+                heroText: 'Desenvolvimento de modelos 3D, mecanismos e peças funcionais. Da primeira ideia ao objeto físico, com foco no detalhe, na funcionalidade e no processo de fabrico.',
+                explore: 'Explorar projetos',
+                selectedWork: 'Trabalho selecionado',
+                featuredProjects: 'Projetos em destaque.',
+                projectsIntro: 'Seleciona um projeto para veres os detalhes, as imagens, as ferramentas e o processo de desenvolvimento.',
+                toolsKnowledge: 'Ferramentas e conhecimentos',
+                technicalSkills: 'Competências técnicas.',
+                skill1: 'Criação de peças, componentes e conjuntos tridimensionais.',
+                skill2: 'Modelação paramétrica, montagem e desenho técnico.',
+                skill3Title: 'Impressão 3D',
+                skill3: 'Preparação de modelos, fatiamento e fabrico aditivo.',
+                skill4Title: 'Desenvolvimento de mecanismos',
+                skill4: 'Conceção de sistemas mecânicos e soluções funcionais.',
+                aboutEyebrow: 'Conhece o autor',
+                aboutTitle: 'Sobre mim.',
+                aboutText: 'Sou o Tomás Cunha e tenho interesse pelo desenvolvimento de produtos, modelação CAD e impressão 3D. Gosto de transformar ideias em objetos reais, explorar mecanismos e melhorar projetos através de testes e prototipagem.',
+                contactEyebrow: 'Vamos conversar',
+                contactTitle: 'Tens um projeto em mente?',
+                contactText: 'Entra em contacto para ideias, colaborações ou projetos personalizados.',
+                loading: 'A carregar projetos...',
+                empty: 'Ainda não existem projetos.',
+                loadError: 'Não foi possível carregar os projetos. Abre o site através do GitHub Pages ou de um servidor local.'
+            }
+        };
 
-    function esc(s = '') {
-        return String(s).replace(/[&<>"']/g, c => ({
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
-        }[c]));
-    }
+        function esc(s = '') {
+            return String(s).replace(/[&<>"']/g, c => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[c]));
+        }
 
-    fetch('projects.json')
-        .then(r => {
-            if (!r.ok) throw Error();
-            return r.json();
-        })
-        .then(data => {
-            allProjects = data;
+        function render() {
+            grid.innerHTML = allProjects.length
+                ? allProjects.map(p => {
+                    const title = currentLanguage === 'en'
+                        ? (p.titleEn || p.title)
+                        : p.title;
+
+                    const summary = currentLanguage === 'en'
+                        ? (p.summaryEn || p.summary || '')
+                        : (p.summary || '');
+
+                    return `
+                        <a class="card" href="project.html?id=${encodeURIComponent(p.id)}">
+                            <div class="cover">
+                                ${p.cover
+                                    ? `<img src="${p.cover}" alt="${esc(title)}">`
+                                    : '<div class="shape"></div>'}
+                            </div>
+
+                            <div class="cardbody">
+                                <h3>${esc(title)}</h3>
+                                <p>${esc(summary)}</p>
+                            </div>
+                        </a>
+                    `;
+                }).join('')
+                : `<p class="muted">${translations[currentLanguage].empty}</p>`;
+        }
+
+        function setLanguage(language) {
+            currentLanguage = language;
+            document.documentElement.lang = language;
+
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.dataset.i18n;
+                const translation = translations[language][key];
+
+                if (translation) {
+                    element.textContent = translation;
+                }
+            });
+
+            languageToggle.textContent = language === 'pt' ? 'EN' : 'PT';
             render();
-        })
-        .catch(() => {
-            grid.innerHTML = `
-                <p class="muted">
-                    Não foi possível carregar os projetos.
-                    Abre o site através do GitHub Pages ou de um servidor local
-                    (por exemplo, Live Server no VS Code).
-                </p>
-            `;
+        }
+
+        languageToggle.addEventListener('click', () => {
+            setLanguage(currentLanguage === 'pt' ? 'en' : 'pt');
         });
 
-    document.getElementById('year').textContent =
-        new Date().getFullYear();
-</script>
+        fetch('projects.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Projects file not found');
+                }
+
+                return response.json();
+            })
+            .then(data => {
+                allProjects = data;
+                render();
+            })
+            .catch(() => {
+                grid.innerHTML = `<p class="muted">${translations[currentLanguage].loadError}</p>`;
+            });
+
+        document.getElementById('year').textContent =
+            new Date().getFullYear();
+    </script>
 
 </body>
 </html>
+
